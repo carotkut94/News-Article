@@ -1,7 +1,10 @@
 package com.death.na;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.util.Log;
+import android.util.TypedValue;
 
 /**
  * Created by rajora_sd on 4/19/2017.
@@ -25,5 +28,10 @@ public class Utils {
         String myUrl = builder.build().toString();
         Log.e("LINK", myUrl);
         return  myUrl;
+    }
+
+    public static int dpToPx(Context context, int dp) {
+        Resources r = context.getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 }

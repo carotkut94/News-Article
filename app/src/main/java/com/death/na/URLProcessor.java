@@ -9,6 +9,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.death.na.models.Favs;
 import com.death.na.models.SourceModel;
 
 import org.json.JSONArray;
@@ -17,9 +18,12 @@ import org.json.JSONObject;
 
 import javax.xml.transform.Source;
 
+import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmQuery;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by rajora_sd on 4/19/2017.
@@ -27,33 +31,29 @@ import io.realm.RealmQuery;
 
 public class URLProcessor {
 
-    Realm realm;
-    RealmConfiguration realmConfiguration;
+    Realm realm, realCategories;
+    RealmConfiguration realmConfiguration,realmConfigurationCateogries;
     private Context context;
     private String url;
-    private JSONObject jsonObject;
 
     URLProcessor(Context context, String url) {
         this.context = context;
         this.url = url;
         Realm.init(context);
         realmConfiguration = new RealmConfiguration.Builder().name("SOURCES").build();
+        realmConfigurationCateogries = new RealmConfiguration.Builder().name("CATEGORIES").build();
         Realm.setDefaultConfiguration(realmConfiguration);
     }
 
     public boolean checkIfIdExists(String id) {
-
-        Realm.setDefaultConfiguration(realmConfiguration);
         realm = Realm.getDefaultInstance();
         RealmQuery<SourceModel> query = realm.where(SourceModel.class)
                 .equalTo("id", id);
         return query.count() != 0;
     }
-
-
-    void addSources(String urlJsonObj) {
+    void addSources() {
         final JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                urlJsonObj, null, new Response.Listener<JSONObject>() {
+                url, null, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
